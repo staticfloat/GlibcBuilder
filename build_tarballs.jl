@@ -2,7 +2,7 @@ using BinaryBuilder
 
 # We have to build multiple versions of glibc because we want to use v2.12 for
 # x86_64 and i686, but powerpc64le doesn't work on anything older than v2.25.
-glibc_version = v"2.25"
+glibc_version = v"2.12.2"
 glibc_version_sources = Dict(
     v"2.12.2" => [
         "https://mirrors.kernel.org/gnu/glibc/glibc-2.12.2.tar.xz" =>
