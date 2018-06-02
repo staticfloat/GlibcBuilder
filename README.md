@@ -8,4 +8,4 @@ on this repository.
 
 This repository was created using [BinaryBuilder.jl](https://github.com/JuliaPackaging/BinaryBuilder.jl)
 
-Because we tend to use different versions of `glibc` on different architectures, this repository has multiple releases spread out across multiple branches.  We recommend using the oldest version possible for the architecture you are interested in.
+Because we tend to use different versions of `glibc` on different architectures, this repository has multiple releases spread out across multiple tags, each supporting different platforms.  We recommend using the oldest version possible for the architecture you are interested in.
