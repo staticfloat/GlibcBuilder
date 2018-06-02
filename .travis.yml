@@ -36,7 +36,7 @@ deploy:
   api_key:
     # Note; this api_key is only valid for staticfloat/GlibcBuilder; you need
     # to make your own: https://docs.travis-ci.com/user/deployment/releases/
-    secure: 
+    secure: S7zoTDAiVISOcUz5id0+/dQphH+9HpmuSt+yUoEQ8iFG9blvMjkskfLfkFdzSp8VrwZDuCeLsoqV/9B/mXvPkNk+Ta1r+ERj5nArGYSaCVmj30EchJcD8qySXN1LrUs45QlYjXa44RQ1XDDDq/ABufjsCeOzT54kE/h9Oc2/hwE2c50pG5WWzIMRlYHFnMrm2miUVnOBXbXT5vp8BvJdIFRPhh6BdZdtwYaUtsG433Pi4tkVxYXSCPHAkZ2oDXcDoN0IjXK/D7mWwCLORSLyL9yHo+QOWl7tW2lgf64uUo5tSGkWJ4HC/iPsjzXLRJwQJxpaR3C6gKH+GMSmDyT5wEPjch/qaCfbM/UzH+IKmMGAqHzIA5XJxwCXsg2I2YaHG1wXa4/mXhyGfRa+ijWAF24TJGlaUeJP6wwtmzhAxBQ7Hdyp60VOBRGSPUG41Nmw7m6euKUBT0dZUUNZ5SK13VfGuXb3/uT40WChZPe6UVfdTVOZ6Ty5TlFBVxtuzApDZTXK+YmzRlH/35UbCLtAzwXyBCQCLrpW2l7R+BfPs3I+WQL+8n6mXM8c5C0uYb/s7/GuGa9QgRMUgfPk9YEfzthuqSpc8bphMHPOHFaxq5XYsIgsSs4t/72xhsWiyGflFwkcod8C1GcinvxCAtEiwXj6W/RURorBxcRZJ83CWfw=
   file_glob: true
   file: products/*
   skip_cleanup: true
