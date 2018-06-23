@@ -1,8 +1,17 @@
 using BinaryBuilder
 
+name = "Glibc"
+
 # We have to build multiple versions of glibc because we want to use v2.12 for
 # x86_64 and i686, but powerpc64le doesn't work on anything older than v2.25.
-glibc_version = v"2.12.2"
+glibc_version_idx = findfirst(x -> startswith(x, "--glibc-version"), ARGS)
+if glibc_version_idx == 0
+    error("This is not a typical build_tarballs.jl!  Must provide glibc version; e.g. --glibc-version v2.12.2!")
+end
+version = VersionNumber(ARGS[glibc_version_idx+1])
+deleteat!(ARGS, (glibc_version_idx, glibc_version_idx+1))
+
+# Given a particular version, pull out the url and hash!
 glibc_version_sources = Dict(
     v"2.12.2" => [
         "https://mirrors.kernel.org/gnu/glibc/glibc-2.12.2.tar.xz" =>
@@ -12,6 +21,10 @@ glibc_version_sources = Dict(
         "https://mirrors.kernel.org/gnu/glibc/glibc-2.17.tar.xz" =>
         "6914e337401e0e0ade23694e1b2c52a5f09e4eda3270c67e7c3ba93a89b5b23e",
     ],
+    v"2.19" => [
+        "https://mirrors.kernel.org/gnu/glibc/glibc-2.19.tar.xz" =>
+        "2d3997f588401ea095a0b27227b1d50cdfdd416236f6567b564549d3b46ea2a2",
+    ],
     v"2.25" => [
         "https://mirrors.kernel.org/gnu/glibc/glibc-2.25.tar.xz" =>
         "067bd9bb3390e79aa45911537d13c3721f1d9d3769931a30c2681bfee66f23a0",
@@ -20,7 +33,7 @@ glibc_version_sources = Dict(
 
 # sources to build, such as glibc, linux kernel headers, our patches, etc....
 sources = [
-    glibc_version_sources[glibc_version]...,
+    glibc_version_sources[version]...,
 	"https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.12.tar.xz" =>
 	"a45c3becd4d08ce411c14628a949d08e2433d8cdeca92036c7013980e93858ab",
     "patches",
@@ -65,6 +78,10 @@ make ${KERNEL_FLAGS} INSTALL_HDR_PATH=${sysroot}/usr V=0 headers_install
 
 # Next, install glibc
 cd $WORKSPACE/srcdir/glibc-*/
+
+# We need newer configure scripts
+update_configure_scripts
+
 # patch glibc to keep around libgcc_s_resume on arm
 # ref: https://sourceware.org/ml/libc-alpha/2014-05/msg00573.html
 patch -p1 < $WORKSPACE/srcdir/patches/glibc_arm_gcc_fix.patch || true
@@ -86,6 +103,10 @@ patch -p0 < $WORKSPACE/srcdir/patches/glibc-sunrpc.patch || true
 # are not needed, but that's ok.
 patch -p0 < $WORKSPACE/srcdir/patches/glibc_nocommon.patch || true
 patch -p0 < $WORKSPACE/srcdir/patches/glibc_regexp_nocommon.patch || true
+
+# patch for avoiding linking in musl libs for a glibc-linked binary
+patch -p1 < $WORKSPACE/srcdir/patches/glibc_musl_rejection.patch || true
+patch -p1 < $WORKSPACE/srcdir/patches/glibc_musl_rejection_old.patch || true
 
 mkdir -p $WORKSPACE/srcdir/glibc_build
 cd $WORKSPACE/srcdir/glibc_build
@@ -109,13 +130,13 @@ platforms = [
 ]
 
 # The earliest ARM version we support is v2.17
-if glibc_version >= v"2.17"
+if version >= v"2.17"
 	push!(platforms, Linux(:aarch64, :glibc))
 	push!(platforms, Linux(:armv7l, :glibc))
 end
 
 # The earlest powerpc64le version we support is v2.25
-if glibc_version >= v"2.25"
+if version >= v"2.25"
     push!(platforms, Linux(:powerpc64le, :glibc))
 end
 
@@ -130,4 +151,4 @@ dependencies = [
 ]
 
 # Build the tarballs, and possibly a `build.jl` as well.
-build_tarballs(ARGS, "Glibc", sources, script, platforms, products, dependencies)
+build_tarballs(ARGS, name, version, sources, script, platforms, products, dependencies)
