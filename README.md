@@ -2,7 +2,7 @@
 
 [![Build Status](https://gitlab.com/BinaryBuilder.jl/GlibcBuilder/badges/master/pipeline.svg)](https://gitlab.com/BinaryBuilder.jl/GlibcBuilder/pipelines)
 
-This repository builds binary artifacts for the MbedTLS project. Binary artifacts are automatically uploaded to
+This repository builds binary artifacts for Glibc. Binary artifacts are automatically uploaded to
 [this repository's GitHub releases page](https://github.com/staticfloat/GlibcBuilder/releases) whenever a tag is created
 on this repository.
 
