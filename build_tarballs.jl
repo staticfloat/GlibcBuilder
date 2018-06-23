@@ -13,21 +13,30 @@ deleteat!(ARGS, (glibc_version_idx, glibc_version_idx+1))
 
 # Given a particular version, pull out the url and hash!
 glibc_version_sources = Dict(
+    # Oldest version for x86_64 and i686
     v"2.12.2" => [
         "https://mirrors.kernel.org/gnu/glibc/glibc-2.12.2.tar.xz" =>
         "0eb4fdf7301a59d3822194f20a2782858955291dd93be264b8b8d4d56f87203f",
     ],
+    # Oldest version for arm and aarch64
     v"2.17" => [
         "https://mirrors.kernel.org/gnu/glibc/glibc-2.17.tar.xz" =>
         "6914e337401e0e0ade23694e1b2c52a5f09e4eda3270c67e7c3ba93a89b5b23e",
     ],
+    # This is the version we actually use for i686, to match our buildbots
     v"2.19" => [
         "https://mirrors.kernel.org/gnu/glibc/glibc-2.19.tar.xz" =>
         "2d3997f588401ea095a0b27227b1d50cdfdd416236f6567b564549d3b46ea2a2",
     ],
+    # Oldest version for ppc64le
     v"2.25" => [
         "https://mirrors.kernel.org/gnu/glibc/glibc-2.25.tar.xz" =>
         "067bd9bb3390e79aa45911537d13c3721f1d9d3769931a30c2681bfee66f23a0",
+    ],
+    # Newest version available
+    v"2.27" => [
+        "https://mirrors.kernel.org/gnu/glibc/glibc-2.27.tar.xz" =>
+        "5172de54318ec0b7f2735e5a91d908afe1c9ca291fec16b5374d9faadfc1fc72",
     ],
 )
 
