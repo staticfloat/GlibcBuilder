@@ -128,7 +128,10 @@ $WORKSPACE/srcdir/glibc-*/configure --prefix=${prefix} \
 	libc_cv_c_cleanup=yes
 
 make -j${nproc}
+
+# Install to the main prefix and also to the sysroot.
 make install
+make install install_root=${sysroot}
 """
 
 # These are the platforms we will build for by default, unless further
