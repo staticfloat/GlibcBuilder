@@ -119,7 +119,7 @@ patch -p1 < $WORKSPACE/srcdir/patches/glibc_musl_rejection_old.patch || true
 
 mkdir -p $WORKSPACE/srcdir/glibc_build
 cd $WORKSPACE/srcdir/glibc_build
-$WORKSPACE/srcdir/glibc-*/configure --prefix=/ \
+$WORKSPACE/srcdir/glibc-*/configure --prefix=/usr \
 	--host=${target} \
 	--with-headers="${sysroot}/usr/include" \
 	--disable-multilib \
@@ -130,8 +130,7 @@ $WORKSPACE/srcdir/glibc-*/configure --prefix=/ \
 make -j${nproc}
 
 # Install to the main prefix and also to the sysroot.
-make install DESTDIR=/ install_root=${prefix}
-make install DESTDIR=/ install_root=${sysroot}
+make install install_root=${sysroot}
 """
 
 # These are the platforms we will build for by default, unless further
