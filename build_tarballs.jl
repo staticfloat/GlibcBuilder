@@ -43,49 +43,11 @@ glibc_version_sources = Dict(
 # sources to build, such as glibc, linux kernel headers, our patches, etc....
 sources = [
     glibc_version_sources[version]...,
-	"https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.12.tar.xz" =>
-	"a45c3becd4d08ce411c14628a949d08e2433d8cdeca92036c7013980e93858ab",
     "patches",
 ]
 
 # Bash recipe for building across all platforms
 script = raw"""
-## Function to take in a target such as `aarch64-linux-gnu`` and spit out a
-## linux kernel arch like "arm64".
-target_to_linux_arch()
-{
-    case "$1" in
-        arm*)
-            echo "arm"
-            ;;
-        aarch64*)
-            echo "arm64"
-            ;;
-        powerpc*)
-            echo "powerpc"
-            ;;
-        i686*)
-            echo "x86"
-            ;;
-        x86*)
-            echo "x86"
-            ;;
-    esac
-}
-
-## sysroot is where most of this stuff gets plopped
-sysroot=${prefix}/${target}/sys-root
-
-# First, install kernel headers
-cd $WORKSPACE/srcdir/linux-*/
-KERNEL_FLAGS="ARCH=\"$(target_to_linux_arch ${target})\" CROSS_COMPILE=\"/opt/${target}/bin/${target}-\" HOSTCC=${CC_FOR_BUILD}"
-
-make ${KERNEL_FLAGS} mrproper
-make ${KERNEL_FLAGS} headers_check
-make ${KERNEL_FLAGS} INSTALL_HDR_PATH=${sysroot}/usr V=0 headers_install
-
-
-# Next, install glibc
 cd $WORKSPACE/srcdir/glibc-*/
 
 # We need newer configure scripts
@@ -116,6 +78,8 @@ patch -p0 < $WORKSPACE/srcdir/patches/glibc_regexp_nocommon.patch || true
 # patch for avoiding linking in musl libs for a glibc-linked binary
 patch -p1 < $WORKSPACE/srcdir/patches/glibc_musl_rejection.patch || true
 patch -p1 < $WORKSPACE/srcdir/patches/glibc_musl_rejection_old.patch || true
+
+sysroot=${prefix}/${target}/sys-root
 
 mkdir -p $WORKSPACE/srcdir/glibc_build
 cd $WORKSPACE/srcdir/glibc_build
@@ -159,6 +123,7 @@ products(prefix) = [
 
 # Dependencies that must be installed before this package can be built
 dependencies = [
+    "https://github.com/staticfloat/LinuxKernelHeadersBuilder/releases/download/v4.12-0/build_LinuxKernelHeaders.v4.12.0.jl",
 ]
 
 # Build the tarballs, and possibly a `build.jl` as well.
